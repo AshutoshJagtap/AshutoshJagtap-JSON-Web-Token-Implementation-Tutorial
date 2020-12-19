@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWT.Authentication-Broker", "JWT.Authentication-Broker\JWT.Authentication-Broker.csproj", "{8064C9B9-0190-4B33-9412-25F5F088F046}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWT.WebApi-Service", "JWT.WebApi-Service\JWT.WebApi-Service.csproj", "{4E435121-3831-451C-B644-04F92723631A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8064C9B9-0190-4B33-9412-25F5F088F046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8064C9B9-0190-4B33-9412-25F5F088F046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8064C9B9-0190-4B33-9412-25F5F088F046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8064C9B9-0190-4B33-9412-25F5F088F046}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E435121-3831-451C-B644-04F92723631A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E435121-3831-451C-B644-04F92723631A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E435121-3831-451C-B644-04F92723631A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E435121-3831-451C-B644-04F92723631A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {927C6C04-F97D-401B-A8F3-56CE2553614E}
+	EndGlobalSection
+EndGlobal
