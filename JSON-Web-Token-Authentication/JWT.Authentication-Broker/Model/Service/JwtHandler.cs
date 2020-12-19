@@ -29,7 +29,7 @@ namespace JWT.Authentication_Broker.Model.Service
         public JwtResponse CreateToken(IList<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
-
+            var username = authClaims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
             var jwtSecurityToken = new JwtSecurityToken(
                     issuer: _settings.ValidIssuer,
                     audience: _settings.ValidAudience,
