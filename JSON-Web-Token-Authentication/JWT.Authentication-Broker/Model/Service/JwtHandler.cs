@@ -24,16 +24,9 @@ namespace JWT.Authentication_Broker.Model.Service
         #endregion
 
         #region Public Mothods
-        public JwtResponse CreateToken(IList<Claim> claims)
+        public JwtResponse CreateToken(IList<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
-            var username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
-            var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
 
             var jwtSecurityToken = new JwtSecurityToken(
                     issuer: _settings.ValidIssuer,
