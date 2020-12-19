@@ -4,9 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace JWT.Authentication_Broker.Model.Service
 {
@@ -26,14 +25,21 @@ namespace JWT.Authentication_Broker.Model.Service
         #region Public Mothods
         public JwtResponse CreateToken(IList<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey));
+            X509Certificate2 x509Certificate2 = GetCertificateFromStore();
+            if (x509Certificate2 == null)
+            {
+                return null;
+            }
+            X509SecurityKey x509SecurityKey = new X509SecurityKey(x509Certificate2);
+            var signingCredentials = new SigningCredentials(x509SecurityKey, SecurityAlgorithms.RsaSha256Signature);
+
 
             var jwtSecurityToken = new JwtSecurityToken(
                     issuer: _settings.ValidIssuer,
                     audience: _settings.ValidAudience,
                     claims: authClaims,
                     expires: DateTime.Now.AddMinutes(30),
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                    signingCredentials: signingCredentials
                 );
             var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
@@ -42,6 +48,25 @@ namespace JWT.Authentication_Broker.Model.Service
                 Token = token,
                 ExpiresAt = DateTime.Now.AddMinutes(30).ToString("dd/MM/yyyy HH:mm:ss"),
             };
+        }
+        #endregion
+
+        #region Private Methods
+        private X509Certificate2 GetCertificateFromStore()
+        {
+            X509Store x509Store = new X509Store(StoreLocation.CurrentUser);
+            try
+            {
+                x509Store.Open(OpenFlags.ReadOnly);
+                X509Certificate2Collection x509Certificate2Collection = x509Store.Certificates;
+                //TODO : SerialNumber read from appsettings. 
+                X509Certificate2Collection currentCertificate = x509Certificate2Collection.Find(X509FindType.FindBySerialNumber, "7cbe911e7a918317d3925430d1ebac52d435289d", false);
+                return currentCertificate.Count == 0 ? null : currentCertificate[0];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         #endregion
     }

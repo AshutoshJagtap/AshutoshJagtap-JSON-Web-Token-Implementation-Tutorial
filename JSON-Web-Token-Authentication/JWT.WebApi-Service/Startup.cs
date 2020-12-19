@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Text;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace JWT.WebApi_Service
@@ -67,6 +67,25 @@ namespace JWT.WebApi_Service
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
+
+                X509Store x509Store = new X509Store(StoreLocation.CurrentUser);
+                X509SecurityKey x509SecurityKey;
+                try
+                {
+                    x509Store.Open(OpenFlags.ReadOnly);
+                    X509Certificate2Collection x509Certificate2Collection = x509Store.Certificates;
+                    //TODO : SerialNumber read from appsettings. 
+                    X509Certificate2Collection currentCertificate = x509Certificate2Collection.Find(X509FindType.FindBySerialNumber, "1612c9e249a11130d54236c358ba4d2c93b694f6", false);
+                    if (currentCertificate.Count == 0)
+                        throw new Exception("");
+                    X509Certificate2 x509Certificate2 = currentCertificate[0];
+                    x509SecurityKey = new X509SecurityKey(x509Certificate2);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
@@ -74,7 +93,7 @@ namespace JWT.WebApi_Service
                     ValidateAudience = true,
                     ValidAudience = Configuration["ExternalConfiguration:ValidAudience"],
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ExternalConfiguration:SecretKey"])),
+                    IssuerSigningKey = x509SecurityKey,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
