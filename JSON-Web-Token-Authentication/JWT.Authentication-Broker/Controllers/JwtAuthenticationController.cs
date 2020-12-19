@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 
 namespace JWT.Authentication_Broker.Controllers
@@ -42,6 +43,24 @@ namespace JWT.Authentication_Broker.Controllers
             var result = _jwtHandler.CreateToken(authClaims);
 
             return Ok(result);
+        }
+
+        [HttpPost()]
+        [Route("GenerateRefreshToken")]
+        public IActionResult GenerateRefreshToken([FromBody] JwtRequest jwtRequest)
+        {
+            var principal = _jwtHandler.GetPrincipalFromToken(jwtRequest.Token);
+            var username = principal.Identity.Name;
+
+            //retrieve the refresh token from a database.
+            var savedRefreshToken = _jwtHandler.GetRefreshTokenByUsername(username);
+            if (savedRefreshToken != jwtRequest.RefreshToken)
+            {
+               return BadRequest("Invalid refresh token");
+            }
+
+            var newJwtRefreshToken = _jwtHandler.CreateToken(principal.Claims.ToList());
+            return Ok(newJwtRefreshToken);
         }
         #endregion
     }

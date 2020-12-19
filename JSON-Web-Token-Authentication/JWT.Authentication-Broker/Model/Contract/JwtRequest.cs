@@ -1,9 +1,8 @@
 ﻿namespace JWT.Authentication_Broker.Model.Contract
 {
-    public class JwtResponse
+    public class JwtRequest
     {
         public string Token { get; set; }
-        public string ExpiresAt { get; set; }
         public string RefreshToken { get; set; }
     }
 }

@@ -6,5 +6,7 @@ namespace JWT.Authentication_Broker.Model.Contract
     public interface IJwtHandler
     {
         JwtResponse CreateToken(IList<Claim> claims);
+        ClaimsPrincipal GetPrincipalFromToken(string token);
+        string GetRefreshTokenByUsername(string username);
     }
 }
